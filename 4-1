@@ -1,0 +1,35 @@
+#include <SevSeg.h>
+#include "SevSeg.h"
+SevSeg sevseg; //Instantiate a seven segment controller object
+int i;
+void setup() {
+  byte numDigits = 4;
+  byte digitPins[] = {5, 4, 3, 2};
+  byte segmentPins[] = {6, 7, 8, 9, 10, 11, 12,13};
+  bool resistorsOnSegments = false; // 'false' means resistors are on digit pins
+  byte hardwareConfig = COMMON_ANODE; // See README.md for options
+  bool updateWithDelays = false; // Default. Recommended
+  bool leadingZeros = false; // Use 'true' if you'd like to keep the leading zeros
+  sevseg.begin(COMMON_CATHODE, numDigits, digitPins, segmentPins, resistorsOnSegments, updateWithDelays, leadingZeros);
+  sevseg.setBrightness(90);
+}
+
+void loop() {
+  static unsigned long timer = millis();
+  static int Min = 59;
+  static int Hour = 23;
+ 
+  if(millis()>=timer)
+   {
+    timer += 200;
+    if(++Min>=60)
+     {
+      Min = 0;
+     if(++Hour>=24)
+      Hour = 0;
+     }
+   }  
+    sevseg.setNumber(Hour*100+Min, 0);
+    sevseg.refreshDisplay();
+  
+}
